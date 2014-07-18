@@ -17,6 +17,9 @@ func TestLog(t *testing.T) {
 	l.Info("hello %s", "Tobi")
 	l.Error("boom something exploded")
 
+	l.SetPrefix("myapp")
+	l.Info("something")
+
 	Debug("something")
 	Emergency("hello %s %s", "tobi", "ferret")
 }

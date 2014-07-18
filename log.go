@@ -46,7 +46,7 @@ func (l *Logger) SetPrefix(str string) {
 	defer l.Unlock()
 
 	if str != "" {
-		str += " "
+		str = " " + str
 	}
 
 	l.Prefix = str
@@ -70,7 +70,7 @@ func (l *Logger) Write(lvl string, level Level, msg string, args ...interface{})
 	}
 
 	ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
-	f := fmt.Sprintf("%s%s %s - %s\n", l.Prefix, ts, lvl, msg)
+	f := fmt.Sprintf("%s %s%s - %s\n", ts, lvl, l.Prefix, msg)
 	_, err := fmt.Fprintf(l.Writer, f, args...)
 	return err
 }
