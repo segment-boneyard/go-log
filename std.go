@@ -19,25 +19,25 @@ func SetLevel(level Level) {
 
 // Debug log.
 func Debug(msg string, args ...interface{}) error {
-	return std.Debug(msg, args...)
+	return std.Write(3, DEBUG, msg, args...)
 }
 
 // Info log.
 func Info(msg string, args ...interface{}) error {
-	return std.Info(msg, args...)
+	return std.Write(3, INFO, msg, args...)
 }
 
 // Warning log.
 func Warning(msg string, args ...interface{}) error {
-	return std.Warning(msg, args...)
+	return std.Write(3, WARNING, msg, args...)
 }
 
 // Error log.
 func Error(msg string, args ...interface{}) error {
-	return std.Error(msg, args...)
+	return std.Write(3, ERROR, msg, args...)
 }
 
-// Emergency log.
+// Fatal log.
 func Fatal(msg string, args ...interface{}) error {
-	return std.Fatal(msg, args...)
+	return std.Write(3, FATAL, msg, args...)
 }

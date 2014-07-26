@@ -6,8 +6,14 @@
 //
 package log
 
-import "time"
-import "sync"
+import (
+	"runtime"
+	"time"
+)
+import (
+	"strconv"
+	"sync"
+)
 import "fmt"
 import "io"
 import "github.com/jehiah/go-strftime"
@@ -32,7 +38,7 @@ var Levels = map[Level]string{
 
 func (l Level) String() string { return Levels[l] }
 
-type Formatter func(ctx string, level Level, msg string) string
+type Formatter func(file string, prefix string, level Level, msg string) string
 
 type Logger struct {
 	Writer io.Writer
@@ -66,14 +72,33 @@ func (l *Logger) SetLevel(level Level) {
 	l.Level = level
 }
 
+func caller(depth int) string {
+	ok, file, line := false, "", 0
+	_, file, line, ok = runtime.Caller(depth)
+	if !ok {
+		file = "???"
+		line = 0
+	}
+	for i := len(file) - 1; i > 0; i-- {
+		if file[i] == '/' {
+			file = file[i+1:]
+			break
+		}
+	}
+	ret := []byte(file)
+	ret = append(ret, ':')
+	ret = append(ret, strconv.Itoa(line)...)
+	return string(ret)
+}
+
 // Standard Formatter
-func StandardFormater(prefix string, level Level, msg string) string {
+func StandardFormater(file string, prefix string, level Level, msg string) string {
 	ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
-	return fmt.Sprintf("%s %s %s - %s", ts, prefix, level, msg)
+	return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
 }
 
 // Write a message.
-func (l *Logger) Write(level Level, msg string, args ...interface{}) error {
+func (l *Logger) Write(depth int, level Level, msg string, args ...interface{}) error {
 	l.Lock()
 	defer l.Unlock()
 
@@ -88,7 +113,7 @@ func (l *Logger) Write(level Level, msg string, args ...interface{}) error {
 	}
 
 	// format the output using a "custom" function
-	f := l.Format(l.Prefix, level, msg)
+	f := l.Format(caller(depth), l.Prefix, level, msg)
 
 	_, err := fmt.Fprintf(l.Writer, f, args...)
 	return err
@@ -96,25 +121,25 @@ func (l *Logger) Write(level Level, msg string, args ...interface{}) error {
 
 // Debug log.
 func (l *Logger) Debug(msg string, args ...interface{}) error {
-	return l.Write(DEBUG, msg, args...)
+	return l.Write(3, DEBUG, msg, args...)
 }
 
 // Info log.
 func (l *Logger) Info(msg string, args ...interface{}) error {
-	return l.Write(INFO, msg, args...)
+	return l.Write(3, INFO, msg, args...)
 }
 
 // Warning log.
 func (l *Logger) Warning(msg string, args ...interface{}) error {
-	return l.Write(WARNING, msg, args...)
+	return l.Write(3, WARNING, msg, args...)
 }
 
 // Error log.
 func (l *Logger) Error(msg string, args ...interface{}) error {
-	return l.Write(ERROR, msg, args...)
+	return l.Write(3, ERROR, msg, args...)
 }
 
 // Fatal log.
 func (l *Logger) Fatal(msg string, args ...interface{}) error {
-	return l.Write(FATAL, msg, args...)
+	return l.Write(3, FATAL, msg, args...)
 }
