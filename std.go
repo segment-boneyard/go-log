@@ -27,11 +27,6 @@ func Info(msg string, args ...interface{}) error {
 	return std.Info(msg, args...)
 }
 
-// Notice log.
-func Notice(msg string, args ...interface{}) error {
-	return std.Notice(msg, args...)
-}
-
 // Warning log.
 func Warning(msg string, args ...interface{}) error {
 	return std.Warning(msg, args...)
@@ -42,17 +37,7 @@ func Error(msg string, args ...interface{}) error {
 	return std.Error(msg, args...)
 }
 
-// Critical log.
-func Critical(msg string, args ...interface{}) error {
-	return std.Critical(msg, args...)
-}
-
-// Alert log.
-func Alert(msg string, args ...interface{}) error {
-	return std.Alert(msg, args...)
-}
-
 // Emergency log.
-func Emergency(msg string, args ...interface{}) error {
-	return std.Emergency(msg, args...)
+func Fatal(msg string, args ...interface{}) error {
+	return std.Fatal(msg, args...)
 }

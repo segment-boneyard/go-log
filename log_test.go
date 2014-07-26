@@ -21,5 +21,7 @@ func TestLog(t *testing.T) {
 	l.Info("something")
 
 	Debug("something")
-	Emergency("hello %s %s", "tobi", "ferret")
+	Fatal("hello %s %s", "tobi", "ferret")
+	Error("stan smith\n")
+	Warning("roger")
 }
