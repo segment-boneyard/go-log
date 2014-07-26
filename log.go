@@ -7,15 +7,16 @@
 package log
 
 import (
-	"fmt"
-	"io"
 	"runtime"
+	"time"
+)
+import (
 	"strconv"
 	"sync"
-	"time"
-
-	"github.com/jehiah/go-strftime"
 )
+import "fmt"
+import "io"
+import "github.com/jehiah/go-strftime"
 
 type Level int
 
@@ -50,15 +51,7 @@ type Logger struct {
 // New logger which writes to `w` at the given `level`. Optionally
 // provide a `prefix` for the logger.
 func New(w io.Writer, level Level, prefix string) *Logger {
-	l := &Logger{
-		Writer: w,
-		Level:  level,
-		Prefix: prefix,
-		Format: func(file string, prefix string, level Level, msg string) string {
-			ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
-			return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
-		},
-	}
+	l := &Logger{Writer: w, Level: level, Prefix: prefix, Format: StandardFormater}
 	l.SetPrefix(prefix)
 	return l
 }
@@ -98,8 +91,17 @@ func caller(depth int) string {
 	return string(ret)
 }
 
+// Standard Formatter
+func StandardFormater(file string, prefix string, level Level, msg string) string {
+	ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
+	return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
+}
+
 // Write a message.
 func (l *Logger) Write(depth int, level Level, msg string, args ...interface{}) error {
+	l.Lock()
+	defer l.Unlock()
+
 	// return early
 	if l.Level > level {
 		return nil
