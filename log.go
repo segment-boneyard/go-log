@@ -14,8 +14,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-
-	"github.com/jehiah/go-strftime"
 )
 
 type Level int
@@ -56,7 +54,7 @@ func New(w io.Writer, level Level, prefix string) *Logger {
 		Level:  level,
 		Prefix: prefix,
 		Format: func(file string, prefix string, level Level, msg string) string {
-			ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
+			ts := time.Now().Format("2006-01-02 15:04:05.000")
 			return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
 		},
 	}
