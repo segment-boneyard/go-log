@@ -1,8 +1,10 @@
 package log
 
-// import "github.com/bmizerany/assert"
-import "testing"
-import "os"
+import (
+	"errors"
+	"os"
+	"testing"
+)
 
 func check(err error) {
 	if err != nil {
@@ -24,4 +26,17 @@ func TestLog(t *testing.T) {
 	Fatal("hello %s %s", "tobi", "ferret")
 	Error("stan smith\n")
 	Warning("roger")
+
+	err := errors.New("francine")
+	Errorif(nil)
+	l.Errorif(nil)
+
+	Errorif(err)
+	l.Errorif(err)
+
+	Panicif(nil)
+	Fatalif(nil)
+
+	l.Panicif(nil)
+	l.Fatalif(nil)
 }

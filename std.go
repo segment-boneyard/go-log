@@ -41,3 +41,31 @@ func Error(msg string, args ...interface{}) error {
 func Fatal(msg string, args ...interface{}) error {
 	return std.Write(3, FATAL, msg, args...)
 }
+
+// Error if error, similar to panic but just log the error and returns
+// true if we got an error. Useful in if statements.
+func Errorif(err error) bool {
+	if err == nil {
+		return false
+	}
+	std.Write(3, ERROR, err.Error())
+	return true
+}
+
+// Panic if error
+func Panicif(err error) {
+	if err == nil {
+		return
+	}
+	std.Write(3, ERROR, err.Error())
+	panic(err)
+}
+
+// Fatal log.
+func Fatalif(err error) {
+	if err == nil {
+		return
+	}
+	std.Write(3, FATAL, err.Error())
+	os.Exit(1)
+}

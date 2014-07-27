@@ -7,16 +7,16 @@
 package log
 
 import (
+	"fmt"
+	"io"
+	"os"
 	"runtime"
-	"time"
-)
-import (
 	"strconv"
 	"sync"
+	"time"
+
+	"github.com/jehiah/go-strftime"
 )
-import "fmt"
-import "io"
-import "github.com/jehiah/go-strftime"
 
 type Level int
 
@@ -51,7 +51,15 @@ type Logger struct {
 // New logger which writes to `w` at the given `level`. Optionally
 // provide a `prefix` for the logger.
 func New(w io.Writer, level Level, prefix string) *Logger {
-	l := &Logger{Writer: w, Level: level, Prefix: prefix, Format: StandardFormater}
+	l := &Logger{
+		Writer: w,
+		Level:  level,
+		Prefix: prefix,
+		Format: func(file string, prefix string, level Level, msg string) string {
+			ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
+			return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
+		},
+	}
 	l.SetPrefix(prefix)
 	return l
 }
@@ -89,12 +97,6 @@ func caller(depth int) string {
 	ret = append(ret, ':')
 	ret = append(ret, strconv.Itoa(line)...)
 	return string(ret)
-}
-
-// Standard Formatter
-func StandardFormater(file string, prefix string, level Level, msg string) string {
-	ts := strftime.Format("%Y-%m-%d %H:%M:%S", time.Now())
-	return fmt.Sprintf("%s %s %s %s - %s", ts, prefix, level, file, msg)
 }
 
 // Write a message.
@@ -142,4 +144,32 @@ func (l *Logger) Error(msg string, args ...interface{}) error {
 // Fatal log.
 func (l *Logger) Fatal(msg string, args ...interface{}) error {
 	return l.Write(3, FATAL, msg, args...)
+}
+
+// Error if error, similar to panic but just log the error and returns
+// true if we got an error. Useful in if statements.
+func (l *Logger) Errorif(err error) bool {
+	if err == nil {
+		return false
+	}
+	l.Write(3, ERROR, err.Error())
+	return true
+}
+
+// Panic if error
+func (l *Logger) Panicif(err error) {
+	if err == nil {
+		return
+	}
+	l.Write(3, ERROR, err.Error())
+	panic(err)
+}
+
+// Fatal log.
+func (l *Logger) Fatalif(err error) {
+	if err == nil {
+		return
+	}
+	l.Write(3, FATAL, err.Error())
+	os.Exit(1)
 }
