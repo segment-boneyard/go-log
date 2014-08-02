@@ -12,7 +12,7 @@
 log.Debug("something")
 log.Emergency("hello %s %s", "tobi", "ferret")
 
-l := log.New(os.Stderr, DEBUG, "")
+l := log.New(os.Stderr, log.DEBUG, "")
 l.Debug("something happened")
 l.Info("hello %s", "Tobi")
 l.Error("boom something exploded")
