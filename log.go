@@ -6,10 +6,12 @@
 //
 package log
 
-import "time"
-import "sync"
-import "fmt"
-import "io"
+import (
+	"fmt"
+	"io"
+	"sync"
+	"time"
+)
 
 type Level int
 
