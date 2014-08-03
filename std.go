@@ -56,3 +56,8 @@ func Alert(msg string, args ...interface{}) error {
 func Emergency(msg string, args ...interface{}) error {
 	return std.Emergency(msg, args...)
 }
+
+// Check if there's an `err` and exit, useful for bootstrapping.
+func Check(err error) {
+	std.Check(err)
+}

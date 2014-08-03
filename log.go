@@ -9,6 +9,7 @@ package log
 import (
 	"fmt"
 	"io"
+	"os"
 	"sync"
 	"time"
 )
@@ -114,4 +115,12 @@ func (l *Logger) Alert(msg string, args ...interface{}) error {
 // Emergency log.
 func (l *Logger) Emergency(msg string, args ...interface{}) error {
 	return l.Write("EMERGENCY", EMERGENCY, msg, args...)
+}
+
+// Check if there's an `err` and exit, useful for bootstrapping.
+func (l *Logger) Check(err error) {
+	if err != nil {
+		std.Error(err.Error())
+		os.Exit(1)
+	}
 }

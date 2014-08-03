@@ -2,6 +2,7 @@ package log
 
 // import "github.com/bmizerany/assert"
 import "testing"
+import "fmt"
 import "os"
 
 func check(err error) {
@@ -22,4 +23,6 @@ func TestLog(t *testing.T) {
 
 	Debug("something")
 	Emergency("hello %s %s", "tobi", "ferret")
+
+	Check(fmt.Errorf("something exploded"))
 }
