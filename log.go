@@ -121,6 +121,7 @@ func (l *Logger) Emergency(msg string, args ...interface{}) error {
 func (l *Logger) Check(err error) {
 	if err != nil {
 		std.Error(err.Error())
+		std.Error("exiting")
 		os.Exit(1)
 	}
 }
