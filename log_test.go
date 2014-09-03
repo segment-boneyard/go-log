@@ -20,6 +20,8 @@ func TestLog(t *testing.T) {
 
 	l.SetPrefix("myapp")
 	l.Info("something")
+	l.Info("something else")
+	l.Info("moar stuff here")
 
 	Debug("something")
 	Emergency("hello %s %s", "tobi", "ferret")
