@@ -72,7 +72,7 @@ func (l *Logger) Write(lvl string, level Level, msg string, args ...interface{})
 	}
 
 	ts := time.Now().Format("2006-01-02 15:04:05")
-	f := fmt.Sprintf("%s (%s)%s - %s\n", ts, lvl, l.Prefix, msg)
+	f := fmt.Sprintf("%s [%s]%s - %s\n", ts, lvl, l.Prefix, msg)
 	_, err := fmt.Fprintf(l.Writer, f, args...)
 	return err
 }
