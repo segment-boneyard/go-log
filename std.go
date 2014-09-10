@@ -9,12 +9,19 @@ import "os"
 
 var std = New(os.Stderr, INFO, "")
 
+// SetPrefix wrapper.
 func SetPrefix(str string) {
 	std.SetPrefix(str)
 }
 
+// SetLevel wrapper.
 func SetLevel(level Level) {
 	std.SetLevel(level)
+}
+
+// SetLevelString wrapper.
+func SetLevelString(level string) {
+	std.SetLevelString(level)
 }
 
 // Debug log.

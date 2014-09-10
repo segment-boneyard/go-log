@@ -29,6 +29,18 @@ const (
 	EMERGENCY
 )
 
+// Level map.
+var levels = map[string]Level{
+	"debug":     DEBUG,
+	"info":      INFO,
+	"notice":    NOTICE,
+	"warning":   WARNING,
+	"error":     ERROR,
+	"critical":  CRITICAL,
+	"alert":     ALERT,
+	"emergency": EMERGENCY,
+}
+
 // Logger.
 type Logger struct {
 	Writer io.Writer
@@ -63,6 +75,23 @@ func (l *Logger) SetLevel(level Level) {
 	defer l.Unlock()
 
 	l.Level = level
+}
+
+// SetLevelString changes the log `level` via string.
+// This is especially useful for providing a command-line
+// flag to your program to adjust the level.
+//
+// If the level string is invalid an error is returned.
+func (l *Logger) SetLevelString(level string) error {
+	l.Lock()
+	defer l.Unlock()
+
+	if val, ok := levels[level]; ok {
+		l.Level = val
+		return nil
+	}
+
+	return fmt.Errorf("%q is not a valid level", level)
 }
 
 // Write a message.
