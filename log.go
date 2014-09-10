@@ -14,8 +14,10 @@ import (
 	"time"
 )
 
+// Level.
 type Level int
 
+// Levels.
 const (
 	DEBUG Level = iota
 	INFO
@@ -27,6 +29,7 @@ const (
 	EMERGENCY
 )
 
+// Logger.
 type Logger struct {
 	Writer io.Writer
 	Level  Level
