@@ -7,6 +7,7 @@
 package log
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -77,6 +78,15 @@ func (l *Logger) SetLevel(level Level) {
 	l.Level = level
 }
 
+// Write to the logger.
+func (l *Logger) Write(b []byte) (n int, err error) {
+	lines := bytes.Split(b, []byte("\n"))
+	for _, line := range lines {
+		l.Info(string(line))
+	}
+	return len(b), nil
+}
+
 // SetLevelString changes the log `level` via string.
 // This is especially useful for providing a command-line
 // flag to your program to adjust the level.
@@ -94,8 +104,8 @@ func (l *Logger) SetLevelString(level string) error {
 	return fmt.Errorf("%q is not a valid level", level)
 }
 
-// Write a message.
-func (l *Logger) Write(lvl string, level Level, msg string, args ...interface{}) error {
+// Log a message.
+func (l *Logger) Log(lvl string, level Level, msg string, args ...interface{}) error {
 	l.Lock()
 	defer l.Unlock()
 
@@ -111,42 +121,42 @@ func (l *Logger) Write(lvl string, level Level, msg string, args ...interface{})
 
 // Debug log.
 func (l *Logger) Debug(msg string, args ...interface{}) error {
-	return l.Write("DEBUG", DEBUG, msg, args...)
+	return l.Log("DEBUG", DEBUG, msg, args...)
 }
 
 // Info log.
 func (l *Logger) Info(msg string, args ...interface{}) error {
-	return l.Write("INFO", INFO, msg, args...)
+	return l.Log("INFO", INFO, msg, args...)
 }
 
 // Notice log.
 func (l *Logger) Notice(msg string, args ...interface{}) error {
-	return l.Write("NOTICE", NOTICE, msg, args...)
+	return l.Log("NOTICE", NOTICE, msg, args...)
 }
 
 // Warning log.
 func (l *Logger) Warning(msg string, args ...interface{}) error {
-	return l.Write("WARNING", WARNING, msg, args...)
+	return l.Log("WARNING", WARNING, msg, args...)
 }
 
 // Error log.
 func (l *Logger) Error(msg string, args ...interface{}) error {
-	return l.Write("ERROR", ERROR, msg, args...)
+	return l.Log("ERROR", ERROR, msg, args...)
 }
 
 // Critical log.
 func (l *Logger) Critical(msg string, args ...interface{}) error {
-	return l.Write("CRITICAL", CRITICAL, msg, args...)
+	return l.Log("CRITICAL", CRITICAL, msg, args...)
 }
 
 // Alert log.
 func (l *Logger) Alert(msg string, args ...interface{}) error {
-	return l.Write("ALERT", ALERT, msg, args...)
+	return l.Log("ALERT", ALERT, msg, args...)
 }
 
 // Emergency log.
 func (l *Logger) Emergency(msg string, args ...interface{}) error {
-	return l.Write("EMERGENCY", EMERGENCY, msg, args...)
+	return l.Log("EMERGENCY", EMERGENCY, msg, args...)
 }
 
 // Check if there's an `err` and exit, useful for bootstrapping.

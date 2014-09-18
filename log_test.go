@@ -2,6 +2,7 @@ package log
 
 // import "github.com/bmizerany/assert"
 import "testing"
+import "bytes"
 import "fmt"
 import "os"
 
@@ -25,6 +26,8 @@ func TestLog(t *testing.T) {
 
 	Debug("something")
 	Emergency("hello %s %s", "tobi", "ferret")
+
+	bytes.NewBufferString("foo\nbar").WriteTo(std)
 
 	Check(fmt.Errorf("something exploded"))
 }
