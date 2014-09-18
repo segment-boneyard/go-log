@@ -80,10 +80,9 @@ func (l *Logger) SetLevel(level Level) {
 
 // Write to the logger.
 func (l *Logger) Write(b []byte) (n int, err error) {
-	buf := bytes.Replace(b, []byte("%"), []byte("%%"), -1)
-	lines := bytes.Split(buf, []byte("\n"))
+	lines := bytes.Split(b, []byte("\n"))
 	for _, line := range lines {
-		l.Info(string(line))
+		l.Info("%s", string(line))
 	}
 	return len(b), nil
 }
