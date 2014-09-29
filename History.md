@@ -1,4 +1,10 @@
 
+v1.7.0 / 2014-09-29
+==================
+
+ * expose std singleton as .Log
+ * add Logger.New(prefix) for inheritance
+
 v1.6.1 / 2014-09-18
 ==================
 
