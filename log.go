@@ -167,7 +167,7 @@ func (l *Logger) Emergency(msg string, args ...interface{}) error {
 // Check if there's an `err` and exit, useful for bootstrapping.
 func (l *Logger) Check(err error) {
 	if err != nil {
-		std.Error("exiting: %s", err.Error())
+		Log.Error("exiting: %s", err.Error())
 		os.Exit(1)
 	}
 }

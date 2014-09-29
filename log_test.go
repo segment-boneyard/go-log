@@ -27,7 +27,7 @@ func TestLog(t *testing.T) {
 	Debug("something")
 	Emergency("hello %s %s", "tobi", "ferret")
 
-	bytes.NewBufferString("foo\nbar %s").WriteTo(std)
+	bytes.NewBufferString("foo\nbar %s").WriteTo(Log)
 
 	Check(fmt.Errorf("something exploded"))
 }
