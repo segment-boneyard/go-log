@@ -70,6 +70,11 @@ func (l *Logger) SetPrefix(str string) {
 	l.Prefix = str
 }
 
+// New logger which inherits the writer and level.
+func (l *Logger) New(prefix string) *Logger {
+	return New(l.Writer, l.Level, prefix)
+}
+
 // SetLevel changes the log `level`.
 func (l *Logger) SetLevel(level Level) {
 	l.Lock()
