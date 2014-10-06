@@ -1,4 +1,9 @@
 
+v1.8.0 / 2014-10-06
+==================
+
+ * add LOG_LEVEL environment variable support
+
 v1.7.0 / 2014-09-29
 ==================
 
