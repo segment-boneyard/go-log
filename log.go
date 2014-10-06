@@ -55,7 +55,16 @@ type Logger struct {
 func New(w io.Writer, level Level, prefix string) *Logger {
 	l := &Logger{Writer: w, Level: level, Prefix: prefix}
 	l.SetPrefix(prefix)
+	l.SetLevelFromEnv("LOG_LEVEL")
 	return l
+}
+
+// SetLevelFromEnv forces the log level based on the given
+// environment variable `name` when present.
+func (l *Logger) SetLevelFromEnv(name string) {
+	if s := os.Getenv("LOG_LEVEL"); s != "" {
+		l.SetLevel(levels[s])
+	}
 }
 
 // SetPrefix changes the prefix to `str`.
