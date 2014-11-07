@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sync"
 	"time"
 )
 
@@ -47,7 +46,6 @@ type Logger struct {
 	Writer io.Writer
 	Level  Level
 	Prefix string
-	sync.Mutex
 }
 
 // New logger which writes to `w` at the given `level`. Optionally
@@ -69,9 +67,6 @@ func (l *Logger) SetLevelFromEnv(name string) {
 
 // SetPrefix changes the prefix to `str`.
 func (l *Logger) SetPrefix(str string) {
-	l.Lock()
-	defer l.Unlock()
-
 	if str != "" {
 		str = " " + str + ":"
 	}
@@ -86,9 +81,6 @@ func (l *Logger) New(prefix string) *Logger {
 
 // SetLevel changes the log `level`.
 func (l *Logger) SetLevel(level Level) {
-	l.Lock()
-	defer l.Unlock()
-
 	l.Level = level
 }
 
@@ -107,9 +99,6 @@ func (l *Logger) Write(b []byte) (n int, err error) {
 //
 // If the level string is invalid an error is returned.
 func (l *Logger) SetLevelString(level string) error {
-	l.Lock()
-	defer l.Unlock()
-
 	if val, ok := levels[level]; ok {
 		l.Level = val
 		return nil
@@ -120,9 +109,6 @@ func (l *Logger) SetLevelString(level string) error {
 
 // Log a message.
 func (l *Logger) Log(lvl string, level Level, msg string, args ...interface{}) error {
-	l.Lock()
-	defer l.Unlock()
-
 	if l.Level > level {
 		return nil
 	}
