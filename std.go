@@ -68,3 +68,8 @@ func Emergency(msg string, args ...interface{}) error {
 func Check(err error) {
 	Log.Check(err)
 }
+
+// Fatalf is equivalent to Error() followed by a call to os.Exit(1).
+func Fatalf(msg string, args ...interface{}) {
+	Log.Fatalf(msg, args...)
+}

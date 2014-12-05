@@ -173,6 +173,11 @@ func (l *Logger) Emergency(msg string, args ...interface{}) error {
 	return l.Log("EMERGENCY", EMERGENCY, msg, args...)
 }
 
+// Fatalf is equivalent to Error() followed by a call to os.Exit(1).
+func (l *Logger) Fatalf(msg string, args ...interface{}) {
+	l.Check(fmt.Errorf(msg, args...))
+}
+
 // Check if there's an `err` and exit, useful for bootstrapping.
 func (l *Logger) Check(err error) {
 	if err != nil {
