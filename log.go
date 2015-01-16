@@ -96,9 +96,14 @@ func (l *Logger) SetLevel(level Level) {
 func (l *Logger) Write(b []byte) (n int, err error) {
 	lines := bytes.Split(b, []byte("\n"))
 	for _, line := range lines {
-		l.Info("%s", string(line))
+		if err == nil {
+			err = l.Info("%s", string(line))
+			if err == nil {
+				n += len(line)
+			}
+		}
 	}
-	return len(b), nil
+	return
 }
 
 // SetLevelString changes the log `level` via string.
